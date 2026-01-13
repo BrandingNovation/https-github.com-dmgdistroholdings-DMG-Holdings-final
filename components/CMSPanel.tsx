@@ -277,15 +277,19 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
             { id: 'media', label: 'Audio' },
             { id: 'vault', label: 'Vault' },
             { id: 'global', label: '🔒 Security' }
-          ].map(tab => (
-            <button 
-              key={tab.id} 
-              onClick={() => setActiveTab(tab.id as any)} 
-              className={`flex-1 py-2 px-3 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-red-600 text-white shadow-xl' : 'text-zinc-500 hover:text-zinc-300'}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          ].map(tab => {
+            // Explicitly ensure global tab shows Security, never Theme
+            const displayLabel = tab.id === 'global' ? '🔒 Security' : tab.label;
+            return (
+              <button 
+                key={tab.id} 
+                onClick={() => setActiveTab(tab.id as any)} 
+                className={`flex-1 py-2 px-3 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-red-600 text-white shadow-xl' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                {displayLabel}
+              </button>
+            );
+          })}
         </div>
       </div>
 

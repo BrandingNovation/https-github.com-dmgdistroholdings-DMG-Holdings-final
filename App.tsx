@@ -149,7 +149,11 @@ const App: React.FC = () => {
   }
 
   const handleLogin = (password: string) => {
-    if (password === (data.adminPassword || 'admin')) {
+    // Trim whitespace and check against stored password
+    const trimmedPassword = password.trim();
+    const storedPassword = data.adminPassword || 'admin';
+    
+    if (trimmedPassword === storedPassword) {
       setIsAdmin(true);
       setIsLoginOpen(false);
       return true;

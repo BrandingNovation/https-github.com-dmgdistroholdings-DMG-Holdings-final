@@ -463,20 +463,33 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
                     <p className="text-[8px] text-zinc-600 uppercase tracking-widest">
                       {data.adminPassword ? `Current: ${data.adminPassword.length} characters` : 'Default: admin'}
                     </p>
-                    <button
-                      onClick={() => {
-                        const newPass = prompt('Enter new admin password (min 4 characters):');
-                        if (newPass && newPass.length >= 4) {
-                          updateNestedValue(['adminPassword'], newPass);
-                          alert('✓ Password updated successfully. You will need to log in again after saving.');
-                        } else if (newPass) {
-                          alert('✗ Password must be at least 4 characters.');
-                        }
-                      }}
-                      className="px-4 py-2 bg-red-600/10 text-red-600 border border-red-600/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
-                    >
-                      Set New
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          const newPass = prompt('Enter new admin password (min 4 characters):');
+                          if (newPass && newPass.length >= 4) {
+                            updateNestedValue(['adminPassword'], newPass.trim());
+                            alert('✓ Password updated successfully. You will need to log in again after saving.');
+                          } else if (newPass) {
+                            alert('✗ Password must be at least 4 characters.');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-600/10 text-red-600 border border-red-600/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
+                      >
+                        Set New
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm('Reset password to default "admin"? You will need to log in again.')) {
+                            updateNestedValue(['adminPassword'], 'admin');
+                            alert('✓ Password reset to default: admin');
+                          }
+                        }}
+                        className="px-4 py-2 bg-white/5 text-zinc-500 border border-white/10 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all"
+                      >
+                        Reset
+                      </button>
+                    </div>
                   </div>
                   <p className="text-[8px] text-zinc-500 italic">
                     Change this password to secure your admin panel. Minimum 4 characters recommended.

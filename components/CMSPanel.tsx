@@ -124,6 +124,7 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
   type TabType = 'branding' | 'vision' | 'enterprises' | 'talent' | 'newsletter' | 'media' | 'vault' | 'global';
   const [activeTab, setActiveTab] = useState<TabType>('branding');
   const [loading, setLoading] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioAddInputRef = useRef<HTMLInputElement>(null);
@@ -275,7 +276,7 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
             { id: 'newsletter', label: 'Mail' },
             { id: 'media', label: 'Audio' },
             { id: 'vault', label: 'Vault' },
-            { id: 'global', label: 'Theme' }
+            { id: 'global', label: 'Security' }
           ].map(tab => (
             <button 
               key={tab.id} 
@@ -431,19 +432,73 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
         )}
 
         {activeTab === 'global' && (
-          <section className="space-y-8">
-             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 border-b border-white/5 pb-2">Institutional Palette</h3>
-             <div className="grid grid-cols-2 gap-4">
+          <section className="space-y-12">
+            {/* Security & Access */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 border-b border-white/5 pb-2">Security & Access</h3>
+              <div className="p-6 bg-black/40 rounded-2xl border border-white/5 space-y-4">
+                <div className="space-y-3">
+                  <label className="text-[9px] uppercase font-black text-zinc-500 tracking-widest block">Admin Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={data.adminPassword || 'admin'}
+                      onChange={e => updateNestedValue(['adminPassword'], e.target.value)}
+                      className="w-full bg-black/50 border border-white/10 p-3 pr-20 text-[11px] rounded-lg text-white font-mono placeholder:text-zinc-700 focus:border-white/30 transition-all"
+                      placeholder="Set admin password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white/5 text-zinc-400 hover:text-white text-[8px] font-black uppercase tracking-widest rounded border border-white/10 transition-all"
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[8px] text-zinc-600 uppercase tracking-widest">
+                      {data.adminPassword ? `Current: ${data.adminPassword.length} characters` : 'Default: admin'}
+                    </p>
+                    <button
+                      onClick={() => {
+                        const newPass = prompt('Enter new admin password (min 4 characters):');
+                        if (newPass && newPass.length >= 4) {
+                          updateNestedValue(['adminPassword'], newPass);
+                          alert('✓ Password updated successfully. You will need to log in again after saving.');
+                        } else if (newPass) {
+                          alert('✗ Password must be at least 4 characters.');
+                        }
+                      }}
+                      className="px-4 py-2 bg-red-600/10 text-red-600 border border-red-600/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
+                    >
+                      Set New
+                    </button>
+                  </div>
+                  <p className="text-[8px] text-zinc-500 italic">
+                    Change this password to secure your admin panel. Minimum 4 characters recommended.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Theme Colors */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 border-b border-white/5 pb-2">Institutional Palette</h3>
+              <div className="grid grid-cols-2 gap-4">
                 {Object.keys(data.theme).map(key => (
                   <div key={key} className="space-y-1">
                     <label className="text-[9px] uppercase font-bold text-zinc-500">{key}</label>
                     <input type="color" value={(data.theme as any)[key]} onChange={e => updateNestedValue(['theme', key], e.target.value)} className="w-full h-10 rounded-xl border-none bg-transparent cursor-pointer" />
                   </div>
                 ))}
-             </div>
-             <div className="pt-12 border-t border-white/5">
-                <button onClick={async () => { if (confirm("DANGER: Wipes browser cache. Continue?")) { await clearDatabase(); window.location.reload(); } }} className="w-full py-4 bg-red-600/10 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-red-600/20 hover:bg-red-600 hover:text-white transition-all">Emergency Local Reset</button>
-             </div>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="pt-8 border-t border-white/5">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 border-b border-white/5 pb-2 mb-4">Danger Zone</h3>
+              <button onClick={async () => { if (confirm("DANGER: Wipes browser cache. Continue?")) { await clearDatabase(); window.location.reload(); } }} className="w-full py-4 bg-red-600/10 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-red-600/20 hover:bg-red-600 hover:text-white transition-all">Emergency Local Reset</button>
+            </div>
           </section>
         )}
       </div>

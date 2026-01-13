@@ -16,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ scrolled, theme, onOpenInquiry, onLogoC
     { label: 'Vision', id: 'vision' },
     { label: 'Enterprises', id: 'portfolio' },
     { label: 'Roster', id: 'roster' },
+    { label: 'Catalog', id: 'catalog' },
     { label: 'Intelligence', id: 'ai-assistant' },
   ];
 

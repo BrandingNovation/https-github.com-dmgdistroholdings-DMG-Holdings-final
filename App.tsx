@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import PortfolioSection from './components/PortfolioSection';
 import VisionSection from './components/VisionSection';
 import RosterSection from './components/RosterSection';
+import CatalogDisplay from './components/CatalogDisplay';
 import AiAssistant from './components/AiAssistant';
 import Footer from './components/Footer';
 import CMSPanel from './components/CMSPanel';
@@ -89,6 +90,10 @@ const INITIAL_DATA: SiteData = {
       url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
     }
   ],
+  // Enhanced Catalog System
+  catalogArtists: [],
+  catalogReleases: [],
+  catalogTracks: [],
   visualDirectives: {
     "hero_image": "Urban street style, brutalist concrete, red neon light accent, high-end music executive vibe.",
     "vision_image": "Studio mixing board, selective red focus, dark industrial theme.",
@@ -167,6 +172,7 @@ const App: React.FC = () => {
         <VisionSection data={data.vision} theme={data.theme} />
         <PortfolioSection sections={data.enterpriseSections} theme={data.theme} onOpenInquiry={openInquiry} />
         <RosterSection data={data.roster} theme={data.theme} />
+        <CatalogDisplay data={data} />
         <CustomSections sections={data.customSections} theme={data.theme} />
         <AiAssistant />
         <Newsletter data={data.newsletter} theme={data.theme} />

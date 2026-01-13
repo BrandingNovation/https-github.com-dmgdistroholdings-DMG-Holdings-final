@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { SiteData, AudioTrack, PortfolioItem, AssetVaultItem } from '../types';
 import { generateSiteImage, generateEnterpriseItem } from '../services/geminiService';
 import { clearDatabase } from '../services/dbService';
+import CatalogManager from './CatalogManager';
 
 interface ImagePreviewProps {
   url: string;
@@ -381,22 +382,12 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
         )}
 
         {activeTab === 'media' && (
-          <section className="space-y-8">
-            <div className="flex justify-between items-center border-b border-white/5 pb-4">
-               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600">Audio System Catalog</h3>
-               <button onClick={() => audioAddInputRef.current?.click()} className="px-4 py-2 bg-red-600/10 text-red-600 border border-red-600/20 rounded-xl text-[9px] font-black uppercase tracking-widest">Upload Asset</button>
+          <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="border-b border-white/5 pb-4">
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 mb-2">Holdings Catalog Management</h3>
+              <p className="text-[9px] text-zinc-500 uppercase tracking-widest">Manage Artists, Releases, and Tracks for Investor Review</p>
             </div>
-            {data.catalog.map((track, idx) => (
-              <div key={track.id} className="p-5 bg-black/40 rounded-2xl border border-white/5 space-y-4">
-                <div className="flex justify-between items-center gap-4">
-                  <div className="flex-1 space-y-2">
-                    <input value={track.title} onChange={e => { const newC = [...data.catalog]; newC[idx].title = e.target.value; onUpdate({ ...data, catalog: newC }); }} className="bg-transparent border-none p-0 text-[11px] font-black uppercase text-white w-full" placeholder="Track Title" />
-                    <input value={track.artist} onChange={e => { const newC = [...data.catalog]; newC[idx].artist = e.target.value; onUpdate({ ...data, catalog: newC }); }} className="bg-transparent border-none p-0 text-[9px] font-bold uppercase text-zinc-600 w-full" placeholder="Artist Name" />
-                  </div>
-                  <button onClick={() => onUpdate({ ...data, catalog: data.catalog.filter(t => t.id !== track.id) })} className="text-red-600 text-lg hover:scale-110 transition-transform">×</button>
-                </div>
-              </div>
-            ))}
+            <CatalogManager data={data} onUpdate={onUpdate} />
           </section>
         )}
 

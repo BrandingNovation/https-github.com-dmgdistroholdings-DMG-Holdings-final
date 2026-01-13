@@ -475,11 +475,32 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
                     </p>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => {
+                        onClick={async () => {
+                          const currentPass = prompt('Enter current password:');
+                          if (!currentPass) return;
+                          
                           const newPass = prompt('Enter new admin password (min 4 characters):');
                           if (newPass && newPass.length >= 4) {
+                            // Try API update first
+                            try {
+                              const { apiService } = await import('../services/apiService');
+                              const apiAvailable = await apiService.checkHealth();
+                              if (apiAvailable) {
+                                const updated = await apiService.updatePassword('admin', currentPass, newPass.trim());
+                                if (updated) {
+                                  alert('✓ Password updated in database. You will need to log in again.');
+                                  return;
+                                } else {
+                                  alert('✗ API password update failed. Updating local password only.');
+                                }
+                              }
+                            } catch (err) {
+                              console.warn('API unavailable, updating local password only');
+                            }
+                            
+                            // Fallback to local update
                             updateNestedValue(['adminPassword'], newPass.trim());
-                            alert('✓ Password updated successfully. You will need to log in again after saving.');
+                            alert('✓ Password updated locally. You will need to log in again after saving.');
                           } else if (newPass) {
                             alert('✗ Password must be at least 4 characters.');
                           }

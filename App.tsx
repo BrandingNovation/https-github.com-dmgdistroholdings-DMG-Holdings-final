@@ -16,6 +16,7 @@ import AudioPlayer from './components/AudioPlayer';
 import InquiryModal from './components/InquiryModal';
 import { SiteData } from './types';
 import { loadSiteData, saveSiteData } from './services/dbService';
+import { apiService } from './services/apiService';
 
 const INITIAL_DATA: SiteData = {
   theme: {
@@ -158,11 +159,28 @@ const App: React.FC = () => {
     );
   }
 
-  const handleLogin = (password: string) => {
-    // Trim whitespace and check against stored password
+  const handleLogin = async (password: string) => {
+    // Trim whitespace
     const trimmedPassword = password.trim();
-    const storedPassword = data.adminPassword || 'admin';
     
+    // Try API authentication first (if available)
+    try {
+      const apiAvailable = await apiService.checkHealth();
+      if (apiAvailable) {
+        const apiLogin = await apiService.login('admin', trimmedPassword);
+        if (apiLogin) {
+          setIsAdmin(true);
+          setIsLoginOpen(false);
+          return true;
+        }
+        // If API login fails, fall through to local check
+      }
+    } catch (error) {
+      console.warn('API authentication unavailable, using local check');
+    }
+    
+    // Fallback to local password check (from site data)
+    const storedPassword = data.adminPassword || 'admin';
     if (trimmedPassword === storedPassword) {
       setIsAdmin(true);
       setIsLoginOpen(false);

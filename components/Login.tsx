@@ -2,21 +2,33 @@
 import React, { useState } from 'react';
 
 interface LoginProps {
-  onLogin: (password: string) => boolean;
+  onLogin: (password: string) => Promise<boolean> | boolean;
   onClose: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onLogin(password)) {
-      setError(false);
-    } else {
+    setLoading(true);
+    setError(false);
+    
+    try {
+      const result = await onLogin(password);
+      if (result) {
+        setError(false);
+      } else {
+        setError(true);
+        setPassword('');
+      }
+    } catch (err) {
       setError(true);
       setPassword('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,9 +68,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClose }) => {
 
           <button 
             type="submit"
-            className="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all active:scale-95 shadow-xl"
+            disabled={loading}
+            className="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all active:scale-95 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Authorize Session
+            {loading ? 'Authenticating...' : 'Authorize Session'}
           </button>
         </form>
       </div>

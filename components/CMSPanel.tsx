@@ -276,7 +276,7 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
             { id: 'newsletter', label: 'Mail' },
             { id: 'media', label: 'Audio' },
             { id: 'vault', label: 'Vault' },
-            { id: 'global', label: 'Security' }
+            { id: 'global', label: '🔒 Security' }
           ].map(tab => (
             <button 
               key={tab.id} 

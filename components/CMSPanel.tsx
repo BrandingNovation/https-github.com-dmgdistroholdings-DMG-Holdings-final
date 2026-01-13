@@ -163,11 +163,21 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && activeUploadPath) {
+      setLoading(`Uploading ${file.name}...`);
       const reader = new FileReader();
       reader.onloadend = () => {
         updateNestedValue(activeUploadPath, reader.result as string);
         setActiveUploadPath(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
+        setLoading(null);
+        // Show success feedback
+        setTimeout(() => {
+          alert(`✓ Image "${file.name}" saved successfully!`);
+        }, 100);
+      };
+      reader.onerror = () => {
+        setLoading(null);
+        alert('✗ Failed to upload image. Please try again.');
       };
       reader.readAsDataURL(file);
     }

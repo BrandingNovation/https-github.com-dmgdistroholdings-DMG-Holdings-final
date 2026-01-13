@@ -123,7 +123,17 @@ const App: React.FC = () => {
   // Sync local changes (Admin only)
   useEffect(() => {
     if (data) {
-      saveSiteData(data).catch(err => console.error("Local sync error:", err));
+      saveSiteData(data)
+        .then(() => {
+          // Silently save - no console spam
+        })
+        .catch(err => {
+          console.error("Local sync error:", err);
+          // Show error only if it's a critical failure
+          if (err.name !== 'QuotaExceededError') {
+            console.warn("Failed to save to IndexedDB:", err);
+          }
+        });
     }
   }, [data]);
 

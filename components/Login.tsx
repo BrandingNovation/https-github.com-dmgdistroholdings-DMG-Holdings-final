@@ -61,10 +61,6 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClose }) => {
             Authorize Session
           </button>
         </form>
-
-        <p className="text-center mt-8 text-[9px] text-zinc-600 uppercase tracking-widest">
-          Default Password: admin
-        </p>
       </div>
     </div>
   );

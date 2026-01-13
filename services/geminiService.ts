@@ -1,8 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Always use the API key directly from process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Always use the API key directly from import.meta.env.VITE_VITE_GEMINI_API_KEY
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_VITE_GEMINI_API_KEY });
 
 const SYSTEM_INSTRUCTION = `
 You are the Chief Strategy Officer (CSO) for DMG DISTRIBUTION HOLDINGS. 

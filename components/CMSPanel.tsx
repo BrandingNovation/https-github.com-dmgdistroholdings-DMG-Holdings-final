@@ -531,9 +531,21 @@ const CMSPanel: React.FC<CMSPanelProps> = ({ data, onUpdate, onExit }) => {
       </div>
 
       <div className="mt-auto p-8 border-t border-white/5 bg-zinc-950/80 backdrop-blur-xl">
-        <div className="grid grid-cols-2 gap-3">
-           <button onClick={downloadJson} className="py-3 bg-white text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 hover:text-white transition-all">Download Publish File</button>
-           <button onClick={() => importInputRef.current?.click()} className="py-3 bg-white/5 text-[9px] font-black uppercase tracking-widest text-zinc-500 rounded-xl border border-white/5">Import State</button>
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <button onClick={downloadJson} className="py-3 bg-white text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 hover:text-white transition-all">Download Publish File</button>
+            <button onClick={() => importInputRef.current?.click()} className="py-3 bg-white/5 text-[9px] font-black uppercase tracking-widest text-zinc-500 rounded-xl border border-white/5">Import State</button>
+          </div>
+          <div className="text-[8px] text-zinc-600 uppercase tracking-widest text-center">
+            {data.assetLibrary && data.assetLibrary.length > 0 ? (
+              <span>✓ {data.assetLibrary.length} images saved locally</span>
+            ) : (
+              <span>No images in vault</span>
+            )}
+          </div>
+          <p className="text-[7px] text-zinc-700 italic text-center">
+            Images auto-save to browser storage. Download JSON to publish permanently.
+          </p>
         </div>
       </div>
     </div>
